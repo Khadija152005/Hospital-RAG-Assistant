@@ -1,9 +1,6 @@
 # ─── Sensitive ────────────────────────────────────────────────────
 .env
 
-# ─── PDF Manuals (large files - store separately) ─────────────────
-data/manuals/*.pdf
-
 # ─── Python ───────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
