@@ -23,7 +23,7 @@ EMBEDDING_MODEL       = os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
 # ─────────────────────────────────────────────────────────────────
 # LLM SETTINGS
 # ─────────────────────────────────────────────────────────────────
-GROQ_MODEL      = "llama-3.1-70b-versatile"   # Best free model on Groq
+GROQ_MODEL      = "llama-3.3-70b-versatile"   # Best free model on Groq
 LLM_TEMPERATURE = 0                            # 0 = deterministic, no creativity
                                                # Good for technical answers
 
@@ -38,7 +38,7 @@ CHUNK_OVERLAP = 150    # overlap between consecutive chunks
 # ─────────────────────────────────────────────────────────────────
 # RETRIEVAL SETTINGS
 # ─────────────────────────────────────────────────────────────────
-TOP_K_RESULTS = 5      # number of chunks to retrieve per query
+TOP_K_RESULTS = 7      # number of chunks to retrieve per query
 
 
 # ─────────────────────────────────────────────────────────────────

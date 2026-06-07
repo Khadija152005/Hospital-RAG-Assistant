@@ -16,8 +16,8 @@ The system prompt enforces:
 """
 
 from langchain_groq import ChatGroq
-from langchain.chains import RetrievalQA
-from langchain.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate
+from langchain_core.output_parsers import StrOutputParser
 from retrieval.retriever import get_retriever, detect_manual_from_query
 from config import GROQ_API_KEY, GROQ_MODEL, LLM_TEMPERATURE
 
@@ -81,28 +81,18 @@ def get_llm():
 # ─────────────────────────────────────────────────────────────────
 # CHAIN BUILDER
 # ─────────────────────────────────────────────────────────────────
-def build_qa_chain(manual_filter: dict = None):
+def build_qa_chain():
     """
-    Build the full RetrievalQA chain.
-
-    Args:
-        manual_filter: optional metadata filter to restrict which
-                       manual is searched. If None, searches all 3.
+    Build the LCEL chain: prompt | llm | output parser.
+    The retriever is intentionally kept outside the chain so we can
+    capture the source documents separately and return them.
 
     Returns:
-        A LangChain RetrievalQA chain ready to invoke.
+        A runnable LCEL chain that accepts {"context": str, "question": str}
+        and returns a plain string answer.
     """
-    llm       = get_llm()
-    retriever = get_retriever(filter=manual_filter)
-
-    chain = RetrievalQA.from_chain_type(
-        llm=llm,
-        chain_type="stuff",           # "stuff" = concatenate all chunks into context
-        retriever=retriever,
-        chain_type_kwargs={"prompt": PROMPT},
-        return_source_documents=True, # so we can show which chunks were used
-    )
-    return chain
+    llm = get_llm()
+    return PROMPT | llm | StrOutputParser()
 
 
 # ─────────────────────────────────────────────────────────────────
@@ -122,21 +112,29 @@ def ask(question: str, manual_filter: dict = None) -> dict:
 
     Returns:
         dict with keys:
-            "question"  : original question
-            "answer"    : generated answer string
-            "sources"   : list of dicts describing chunks used
+            "question"   : original question
+            "answer"     : generated answer string
+            "sources"    : list of dicts describing chunks used
             "filter_used": which filter was applied (or None)
     """
     # Auto-detect manual from question if no filter provided
     if manual_filter is None:
         manual_filter = detect_manual_from_query(question)
 
-    chain  = build_qa_chain(manual_filter)
-    result = chain.invoke({"query": question})
+    # Step 1: retrieve relevant chunks (kept separate to capture source docs)
+    retriever = get_retriever(filter=manual_filter)
+    docs      = retriever.invoke(question)
 
-    # Format source information
+    # Step 2: build context string from retrieved chunks
+    context = "\n\n".join(doc.page_content for doc in docs)
+
+    # Step 3: run the LCEL chain → plain string answer
+    chain  = build_qa_chain()
+    answer = chain.invoke({"context": context, "question": question})
+
+    # Step 4: format source information for the caller
     sources = []
-    for doc in result.get("source_documents", []):
+    for doc in docs:
         sources.append({
             "manual":       doc.metadata.get("source_manual", "Unknown"),
             "device_type":  doc.metadata.get("device_type", "Unknown"),
@@ -147,7 +145,7 @@ def ask(question: str, manual_filter: dict = None) -> dict:
 
     return {
         "question":    question,
-        "answer":      result["result"],
+        "answer":      answer,
         "sources":     sources,
         "filter_used": manual_filter,
     }
