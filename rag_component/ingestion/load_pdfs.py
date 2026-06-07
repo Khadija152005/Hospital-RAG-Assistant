@@ -42,8 +42,13 @@ def load_single_manual(manual_name: str) -> list:
 
     print(f"  Loading {manual_name} from {path} ...")
 
-    loader = PDFPlumberLoader(path)
-    docs   = loader.load()
+    # MAC 2000 has encoding issues — PyMuPDF recovers spaces better
+    if manual_name == "MAC_2000":
+        from langchain_community.document_loaders import PyMuPDFLoader
+        loader = PyMuPDFLoader(path)
+    else:
+        loader = PDFPlumberLoader(path)
+    docs = loader.load()
 
     # Enrich every page document with metadata
     for doc in docs:
