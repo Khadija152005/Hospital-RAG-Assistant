@@ -16,3 +16,11 @@ This project is currently in **Level 1: Foundation Setup**
 - Database connection layer
 - ORM models setup
 - First data query test
+
+
+## Phase 1: Asset Monitoring Pipeline
+
+- Built SQLAlchemy-based data layer
+- Implemented asset maintenance tracking
+- Created due assets detection logic
+- Developed Service → Tool → Agent pipeline (v1)

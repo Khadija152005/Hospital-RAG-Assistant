@@ -1,0 +1,1 @@
+from .asset_service import AssetService
