@@ -2,14 +2,21 @@ from fastapi import FastAPI
 from db import Base, SessionLocal
 from sqlalchemy import text
 from models import Asset
-from services import AssetService
+from services import AssetService, NotificationLogService
 from tools import get_due_assets_tool, EmailSender
 from agents import DeviceAgent, AssignmentAgent, EmailAgent
+from schemas import NotificationLogCreate
+
+
+
+
 
 
 def run_pipeline():
 
     db = SessionLocal()
+
+    service = NotificationLogService(db)
 
     device_agent = DeviceAgent()
     assignment_agent = AssignmentAgent()
@@ -47,5 +54,7 @@ def run_pipeline():
 
 if __name__ == "__main__":
     run_pipeline()
+
+
 # app = FastAPI()
 # app.include_router(base.base_router)

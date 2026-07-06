@@ -50,3 +50,12 @@ This project is currently in **Level 1: Foundation Setup**
 - Built Email Sender Tool.
 - Successfully delivered real maintenance reminder emails.
 - Prepared the pipeline for notification logging and LLM-powered email generation.
+
+
+## Current Progress
+
+- Asset & Maintenance Services implemented
+- Assignment system implemented
+- Email sender integrated with SMTP
+- Notification logging stored in PostgreSQL
+- EmailSender refactored to structured result object

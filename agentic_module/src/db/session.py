@@ -1,9 +1,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from core import Settings
+from core import settings
 
 # Create Engine (connection to Neon DB)
-engine = create_engine(Settings().DATABASE_URL, echo=False)
+engine = create_engine(settings.DATABASE_URL, echo=False)
 
 # Create Session factory
 SessionLocal = sessionmaker(

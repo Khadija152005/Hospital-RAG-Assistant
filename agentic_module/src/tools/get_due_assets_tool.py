@@ -1,6 +1,6 @@
 from db import SessionLocal
 from services import AssetService
-from core import Settings
+from core import settings
 
 def get_due_assets_tool():
     """
@@ -13,7 +13,7 @@ def get_due_assets_tool():
         service = AssetService(db)
 
         assets = service.get_due_assets(
-            reminder_days=Settings().REMINDER_DAYS
+            reminder_days=settings.REMINDER_DAYS
         )
 
      
