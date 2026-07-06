@@ -3,8 +3,9 @@ from db import Base, SessionLocal
 from sqlalchemy import text
 from models import Asset
 from services import AssetService
-from tools import get_due_assets_tool
+from tools import get_due_assets_tool, EmailSender
 from agents import DeviceAgent, AssignmentAgent, EmailAgent
+
 
 def run_pipeline():
 
@@ -27,6 +28,21 @@ def run_pipeline():
     print("\n📧 Generated Emails:")
     for e in emails[:1]:
         print(e)
+
+
+    email_agent = EmailAgent()
+    sender = EmailSender()
+
+    emails = email_agent.build_emails(enriched_tasks)
+
+    print("\n📧 Sending Emails...\n")
+
+    for email in emails[:3]: 
+        sender.send_email(
+            to_email=email["to"],
+            subject=email["subject"],
+            body=email["body"]
+        )    
 
 
 if __name__ == "__main__":

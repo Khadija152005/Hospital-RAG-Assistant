@@ -41,3 +41,12 @@ This project is currently in **Level 1: Foundation Setup**
 - Generated structured email format (to, subject, body)
 - Integrated with Assignment Agent output (AssignmentResult schema)
 - Built foundation for future SMTP/Gmail integration
+
+
+## Phase 4: Email Notification
+
+- Implemented Email Agent for reminder generation.
+- Added Gmail SMTP integration.
+- Built Email Sender Tool.
+- Successfully delivered real maintenance reminder emails.
+- Prepared the pipeline for notification logging and LLM-powered email generation.
