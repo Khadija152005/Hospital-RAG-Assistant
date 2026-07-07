@@ -1,29 +1,41 @@
 from typing import List
-from schemas import AssignmentResult
+
+from schemas import AssignmentResult, EmailTask
 
 
 class EmailAgent:
 
-    def build_emails(self, tasks: List[AssignmentResult]):
+    def build_emails(
+        self,
+        tasks: List[AssignmentResult],
+    ) -> List[EmailTask]:
 
-        emails = []
+        emails: List[EmailTask] = []
 
         for task in tasks:
 
-            if not task.assigned_staff:
+            if task.assigned_staff is None:
                 continue
 
-            email = {
-                "to": task.assigned_staff.email,
-                "subject": f"🚨 Maintenance Reminder - {task.asset_id}",
-                "body": self._build_body(task)
-            }
+            email = EmailTask(
+                asset_id=task.asset_id,
+                asset_name=task.asset_name,
+                department=task.department,
+                next_maintenance_date=task.next_maintenance_date,
+                assignment_status=task.assignment_status,
+                assigned_staff=task.assigned_staff,
+                email_subject=f"🚨 Maintenance Reminder - {task.asset_id}",
+                email_body=self._build_body(task),
+            )
 
             emails.append(email)
 
         return emails
 
-    def _build_body(self, task: AssignmentResult):
+    def _build_body(
+        self,
+        task: AssignmentResult,
+    ) -> str:
 
         return f"""
 Hello {task.assigned_staff.name},
@@ -31,10 +43,12 @@ Hello {task.assigned_staff.name},
 This is a maintenance reminder for your assigned medical equipment.
 
 Asset ID: {task.asset_id}
-Department: {task.assigned_staff.role}
-Status: {task.assignment_status}
+Asset Name: {task.asset_name}
+Department: {task.department}
 
-Please ensure maintenance is completed as scheduled.
+Next Maintenance Date: {task.next_maintenance_date}
+
+Please ensure maintenance is completed before the scheduled date.
 
 — Hospital Maintenance System
 """

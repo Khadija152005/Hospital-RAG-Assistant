@@ -59,3 +59,70 @@ This project is currently in **Level 1: Foundation Setup**
 - Email sender integrated with SMTP
 - Notification logging stored in PostgreSQL
 - EmailSender refactored to structured result object
+
+
+## Current Workflow
+
+The current maintenance notification workflow:
+
+```bash
+Device Agent
+|
+v
+Assignment Agent
+|
+v
+Email Agent
+|
+v
+Email Sender
+|
+v
+Logger Agent
+|
+v
+Notification Log Database
+```
+
+
+
+
+## Implemented Components
+
+### Agents
+
+- DeviceAgent
+  - Retrieves maintenance due assets.
+
+- AssignmentAgent
+  - Finds responsible staff for each asset.
+
+- EmailAgent
+  - Generates maintenance reminder emails.
+
+- LoggerAgent
+  - Records notification results.
+
+### Services
+
+- AssetService
+- AssignmentService
+- NotificationLogService
+
+### Tools
+
+- Assignment Tool
+- Email Sender
+- Notification Logging Tool
+
+## Database
+
+The module uses PostgreSQL with SQLAlchemy ORM.
+
+Implemented tables:
+
+- asset
+- staff
+- asset_assignment
+- asset_maintenance
+- notification_log
