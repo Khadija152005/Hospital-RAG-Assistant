@@ -22,7 +22,8 @@ class AssetService:
         # temporary solution for testing purposes
         today = date.today()
         target_date = today + timedelta(days=reminder_days)
-        overdue_limit = today - timedelta(days=10)
+        overdue_limit = today - timedelta(days=0)
+        # overdue_limit = today - timedelta(days=10)
 
         latest_maintenance = (
             self.db.query(

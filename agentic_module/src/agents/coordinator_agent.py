@@ -2,6 +2,7 @@ from agents import (
     DeviceAgent,
     AssignmentAgent,
     EmailAgent,
+    LoggerAgent
 )
 
 from tools import EmailSender
@@ -19,20 +20,37 @@ class CoordinatorAgent:
 
         self.email_sender = EmailSender()
 
+        self.logger_agent = LoggerAgent()
+
     def run(self):
 
         print("🚀 Starting Maintenance Workflow...")
 
-        device_result = self.device_agent.run()
+        device_tasks = self.device_agent.run()
 
-        print("✅ Device Results")
+        print("✅ Device tasks fetched successfully.")
 
-        assignment_result = self.assignment_agent.enrich_tasks(device_result)
+        assignment_tasks = self.assignment_agent.enrich_tasks(device_tasks)
 
-        print("✅ Assignment Results")
+        print("✅ Assignment tasks enriched successfully.")
 
-        email_result = self.email_agent.build_emails(assignment_result)
+        email_tasks = self.email_agent.build_emails(assignment_tasks)
 
-        print("✅ Email Results")
+        print("✅ Email tasks built successfully.")
 
-        print(email_result)
+        email_send_result = self.email_sender.send_emails(email_tasks)
+
+        print("✅ Email Send Results")
+
+        logger_result = self.logger_agent.log(email_tasks, email_send_result)
+       
+        print("✅ Logger Results")
+
+        
+        return {
+            "status": "success",
+            "devices_found": len(device_tasks),
+            "emails_generated": len(email_tasks),
+            "emails_sent": sum(r.success for r in email_results),
+            "notifications_logged": len(logger_results),
+        }
