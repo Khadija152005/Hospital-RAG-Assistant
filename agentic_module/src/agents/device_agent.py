@@ -11,9 +11,9 @@ class DeviceAgent:
         1. Get due assets
         2. Transform them into "agent decisions"
         """
-
+        
         assets = get_due_assets_tool()
-
+        
         if not assets:
             return {
                 "status": "no_due_assets",
@@ -21,9 +21,9 @@ class DeviceAgent:
             }
 
         tasks = []
-
+        
         for asset in assets:
-
+            
             task = {
                 "asset_id": asset["asset_id"],
                 "asset_name": asset["asset_name"],
@@ -34,7 +34,7 @@ class DeviceAgent:
             }
 
             tasks.append(task)
-
+        
         return {
             "status": "success",
             "count": len(tasks),
