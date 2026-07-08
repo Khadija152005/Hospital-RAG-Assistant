@@ -1,100 +1,292 @@
 # 🏥 Hospital AI Central
 
-Welcome to **Hospital AI Central** — a comprehensive hospital infrastructure management platform designed to empower clinical and biomedical engineering teams with instant, AI-driven technical support. 
+Welcome to **Hospital AI Central** — a comprehensive AI-powered hospital infrastructure management platform designed to support clinical engineers, biomedical engineers, and healthcare organizations through intelligent assistance, analytics, and future-ready hospital management services.
 
-This repository contains both the overarching Web Dashboard and the core RAG (Retrieval-Augmented Generation) Assistant that allows engineers to query complex medical device manuals in natural language.
-
----
-
-## 🌟 Key Features
-
-1. **Intelligent RAG Assistant:**
-   - Chat with medical device manuals (e.g., BeneFusion VP3, MAC 2000, Fresenius 4008S).
-   - Generates grounded, step-by-step troubleshooting and calibration instructions.
-   - Refuses to hallucinate: strictly relies on the provided PDFs.
-
-2. **Multilingual Support (Native Arabic & More):**
-   - Ask questions in Arabic or any other language! 
-   - A lightweight LLM translation node intercepts the query, translates it to English, searches the English vector database, and dynamically translates the final answer back to your native language.
-
-3. **Advanced PDF Ingestion & OCR:**
-   - Capable of reading complex, badly-formatted PDFs.
-   - Implements **PyMuPDF** for character-level coordinate extraction (fixes concatenated word issues).
-   - Implements **Tesseract OCR (pdf2image)** fallback for image-based PDFs (e.g., scanned troubleshooting tables).
-
-4. **Beautiful Modern UI:**
-   - **Landing Page:** Highlights current and future platform capabilities (Analytics, Inventory).
-   - **RAG Dashboard:** Interactive chat interface with citations, source tracking, and smooth mobile-responsive layouts.
-   - **Dark Mode:** Fully supported with `localStorage` persistence.
-   - **Settings Panel:** Dynamically update your API keys directly from the UI without restarting the server.
+The platform combines multiple AI modules into one centralized system, including **Retrieval-Augmented Generation (RAG)** for medical manuals and **Conversational Analytics** for natural language database querying.
 
 ---
 
-## 🛠️ Architecture & Tech Stack
+# 🌟 Key Features
 
-| Component | Technology | Description |
-|-----------|------------|-------------|
-| **Backend API** | FastAPI | Hosts the web server and serves the REST endpoints (`/api/chat`, `/api/settings`). |
-| **Frontend** | HTML/CSS/JS | Vanilla web stack with a custom Glassmorphic design and FontAwesome icons. |
-| **LLM Framework**| LangChain | Manages the RAG pipeline, prompting, and output parsing. |
-| **Embeddings** | `all-MiniLM-L6-v2` | Fast, local HuggingFace embedding model (no API key required). |
-| **Database** | Neon + `pgvector` | PostgreSQL cloud database with native vector similarity search. |
-| **Inference** | Groq API (Llama 3) | Blazing fast LLM inference (Free Tier) for translation and generation. |
+## 🤖 Intelligent RAG Assistant
+- Chat with medical device manuals using natural language.
+- Supports devices such as:
+  - BeneFusion VP3
+  - MAC 2000
+  - Fresenius 4008S
+- Generates grounded troubleshooting and calibration instructions.
+- Answers are generated only from uploaded manuals to minimize hallucinations.
 
-### Directory Structure
+---
+
+## 📊 Conversational Analytics
+- Query hospital databases using natural language.
+- Converts English questions into SQL automatically.
+- Executes only safe read-only SQL queries.
+- Returns human-readable answers together with query results.
+- SQL validation prevents unsafe statements.
+- Powered by LangChain + Google Gemini + PostgreSQL.
+
+Example Questions:
+
+- Which medical device has the highest downtime?
+- Count assets by department.
+- Top 5 assets by maintenance cost.
+- Which spare parts are below the reorder level?
+
+---
+
+## 🌍 Multilingual Support
+- Supports Arabic and English.
+- User questions are translated automatically when required.
+- Final answers are returned in the user's language.
+
+---
+
+## 📄 Advanced PDF Processing
+- PyMuPDF text extraction
+- OCR support for scanned manuals
+- pdfplumber parsing
+- Character-level extraction
+- Automatic chunking & embedding
+
+---
+
+## 🎨 Modern Web Dashboard
+- Landing Page
+- RAG Assistant Dashboard
+- Dark Mode
+- Responsive Design
+- API Settings Panel
+- Source citations
+- Mobile Friendly UI
+
+---
+
+# 🛠 Technology Stack
+
+| Component | Technology |
+|------------|------------|
+| Backend | FastAPI |
+| Frontend | HTML / CSS / JavaScript |
+| RAG Framework | LangChain |
+| Conversational Analytics | LangChain SQL + Google Gemini |
+| Embeddings | all-MiniLM-L6-v2 |
+| Database | PostgreSQL + pgvector |
+| ORM | SQLAlchemy |
+| LLM Providers | Groq + Google Gemini |
+| Environment | Python |
+
+---
+
+# 📂 Project Structure
+
 ```text
 Hospital-RAG-Assistant/
-├── app.py                      # Main FastAPI server entry point
-├── requirements.txt            # Python dependencies
-├── website/                    # Frontend UI assets
-│   ├── index.html              # Landing Page
-│   ├── rag.html                # RAG Assistant Dashboard
-│   ├── styles.css              # Custom styling (Light & Dark modes)
-│   └── script.js               # Frontend logic and API calls
-└── rag_component/              # Core RAG backend logic
-    ├── .env                    # Environment variables (API keys, DB connection)
-    ├── config.py               # Central configuration loader
-    ├── ingestion/              # Scripts to chunk and embed PDFs (pdfplumber, PyMuPDF, OCR)
-    └── retrieval/              # Semantic search and LangChain generation logic
+│
+├── app.py
+├── requirements.txt
+├── README.md
+│
+├── website/
+│   ├── index.html
+│   ├── rag.html
+│   ├── styles.css
+│   └── script.js
+│
+├── rag_component/
+│   ├── config.py
+│   ├── ingestion/
+│   ├── retrieval/
+│   └── ...
+│
+├── conversational_analytics/
+│   ├── app/
+│   ├── docs/
+│   ├── tests/
+│   ├── .env.example
+│   └── README.md
+│
+└── agentic_module/
 ```
 
 ---
 
-## 🚀 Setup & Installation (One-Time)
+# 🚀 Installation
 
-### 1. Install Dependencies
-Make sure you have Python 3 installed, then run:
+Clone the repository
+
+```bash
+git clone <repository-url>
+cd Hospital-RAG-Assistant
+```
+
+Install dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
-*(Note: If you plan to rebuild the vector database using OCR, you will also need to install [Tesseract OCR](https://github.com/UB-Mannheim/tesseract/wiki) and [Poppler](http://blog.alivate.com.au/poppler-windows/) on your system.)*
-
-### 2. Configure Environment Variables
-Inside the `rag_component/` folder, create or edit the `.env` file:
-```ini
-GROQ_API_KEY=gsk_your_free_groq_api_key_here
-NEON_CONNECTION_STRING=postgresql://username:password@your-neon-host.aws.neon.tech/hospital_rag
-```
-*(You can also update the Groq API key directly via the Settings gear icon in the Web UI!)*
-
-### 3. Run the Server
-Launch the FastAPI application from the **root directory**:
-```bash
-python app.py
-```
-### 4. Open the Dashboard
-Open your browser and navigate to:
-👉 **[http://localhost:8000](http://localhost:8000)**
 
 ---
 
-## 📚 Database Ingestion (For Admins)
-If you need to add new medical manuals to the database:
-1. Place the PDF in `rag_component/data/manuals/`.
-2. Update the `MANUALS` dictionary in `rag_component/config.py`.
-3. Run the ingestion script:
+# ⚙ Configuration
+
+Create a `.env` file and configure:
+
+```ini
+GROQ_API_KEY=YOUR_GROQ_KEY
+
+GOOGLE_API_KEY=YOUR_GEMINI_KEY
+
+NEON_CONNECTION_STRING=YOUR_DATABASE
+
+PGHOST=
+PGDATABASE=
+PGUSER=
+PGPASSWORD=
+```
+
+---
+
+# ▶ Running the Application
+
 ```bash
-cd rag_component
+python app.py
+```
+
+or
+
+```bash
+uvicorn app:app --reload
+```
+
+Open
+
+```
+http://localhost:8000
+```
+
+Swagger Documentation
+
+```
+http://localhost:8000/docs
+```
+
+---
+
+# 📡 API Endpoints
+
+## RAG Assistant
+
+### POST
+
+```
+/api/chat
+```
+
+Example
+
+```json
+{
+    "question":"How do I calibrate MAC 2000?"
+}
+```
+
+---
+
+## Settings
+
+### POST
+
+```
+/api/settings
+```
+
+Example
+
+```json
+{
+    "groq_api_key":"YOUR_KEY"
+}
+```
+
+---
+
+## Conversational Analytics
+
+### Health Check
+
+```
+GET /analytics/health
+```
+
+---
+
+### Ask Analytics
+
+```
+POST /analytics/ask
+```
+
+Example
+
+```json
+{
+    "question":"Which medical device has the highest downtime?"
+}
+```
+
+---
+
+# 📚 Adding New Medical Manuals
+
+1. Copy PDF into
+
+```
+rag_component/data/manuals
+```
+
+2. Update
+
+```
+config.py
+```
+
+3. Run
+
+```bash
 python run_ingestion.py
 ```
-This script will extract the text (using OCR if necessary), chunk it, embed it using HuggingFace, and push the vectors to your Postgres database. Takes ~5 minutes depending on the PDF size.
+
+---
+
+# 🔒 Security
+
+- Read-only SQL execution
+- SQL validation before execution
+- Environment variables for API keys
+- No destructive SQL statements are allowed
+
+---
+
+# 🚀 Future Work
+
+- Inventory Management
+- Predictive Maintenance
+- Asset Tracking
+- Preventive Maintenance Scheduling
+- Multi-Agent AI
+- Dashboard Analytics
+- Authentication & Authorization
+
+---
+
+# 👨‍💻 Team
+
+Developed as a Graduation / AI Project for intelligent hospital infrastructure management using modern Generative AI technologies.
+
+---
+
+# 📄 License
+
+This project is intended for educational and research purposes.
