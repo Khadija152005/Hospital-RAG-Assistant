@@ -274,3 +274,47 @@ Available endpoints:
 - `POST /maintenance/run`
   - Executes the complete maintenance notification workflow.
   - Returns workflow execution summary.
+
+##  Scheduler Integration
+
+- Added automated workflow scheduling using APScheduler.
+- Created Scheduler layer to trigger maintenance workflows automatically.
+- Integrated Scheduler with Coordinator Agent.
+- Added configurable execution time through environment variables.
+- Prepared the system for automated daily maintenance monitoring.
+
+Scheduler workflow:
+
+```text
+      Scheduler
+          |
+          v
+  Coordinator Agent
+          |
+          v
+    Device Agent
+          |
+          v
+  Assignment Agent
+          |
+          v
+     Email Agent
+          |
+          v
+  Email Sender Tool
+          |
+          v
+    Logger Agent
+          |
+          v
+Notification Log Database
+```
+
+
+Configuration:
+
+Scheduler execution time can be controlled using `.env`:
+
+```env
+CRON_TIME_HOUR=8
+CRON_TIME_MINUTE=0

@@ -17,6 +17,9 @@ class Settings:
             os.getenv("REMINDER_DAYS", 3)
         )
 
+        self.CRON_TIME_HOUR = int(os.getenv("CRON_TIME_HOUR"))
+        self.CRON_TIME_MINUTE = int(os.getenv("CRON_TIME_MINUTE"))
+
         self.SMTP_EMAIL = os.getenv("SMTP_EMAIL")
         self.SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
         self.SMTP_SERVER = os.getenv("SMTP_SERVER")
