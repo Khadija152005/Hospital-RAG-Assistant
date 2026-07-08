@@ -238,3 +238,39 @@ agentic_module/
 - Add API layer for triggering maintenance workflows.
 - Introduce LangGraph for advanced agent orchestration.
 - Integrate LLM capabilities for intelligent decision making.
+
+
+## API Layer Integration
+
+- Added FastAPI application entry point.
+- Created maintenance API router structure.
+- Integrated the maintenance workflow with HTTP endpoints.
+- Prepared the system for external triggering through API requests.
+
+Current API workflow:
+
+```text
+  Client Request
+        |
+        v
+FastAPI Application
+        |
+        v
+Maintenance Router
+        |
+        v
+Coordinator Agent
+        |
+        v
+Agentic Maintenance Workflow
+```
+
+
+Available endpoints:
+
+- `GET /maintenance/health`
+  - Checks API availability.
+
+- `POST /maintenance/run`
+  - Executes the complete maintenance notification workflow.
+  - Returns workflow execution summary.

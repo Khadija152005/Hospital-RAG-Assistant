@@ -24,33 +24,33 @@ class CoordinatorAgent:
 
     def run(self):
 
-        print("🚀 Starting Maintenance Workflow...")
+        # print("🚀 Starting Maintenance Workflow...")
 
         device_tasks = self.device_agent.run()
 
-        print("✅ Device tasks fetched successfully.")
+        # print("✅ Device tasks fetched successfully.")
 
         assignment_tasks = self.assignment_agent.enrich_tasks(device_tasks)
 
-        print("✅ Assignment tasks enriched successfully.")
+        # print("✅ Assignment tasks enriched successfully.")
 
         email_tasks = self.email_agent.build_emails(assignment_tasks)
 
-        print("✅ Email tasks built successfully.")
+        # print("✅ Email tasks built successfully.")
 
-        email_send_result = self.email_sender.send_emails(email_tasks)
+        email_send_results = self.email_sender.send_emails(email_tasks)
 
-        print("✅ Email Send Results")
+        # print("✅ Email Send Results")
 
-        logger_result = self.logger_agent.log(email_tasks, email_send_result)
+        logger_results = self.logger_agent.log(email_tasks, email_send_results)
        
-        print("✅ Logger Results")
+        # print("✅ Logger Results")
 
         
         return {
             "status": "success",
             "devices_found": len(device_tasks),
             "emails_generated": len(email_tasks),
-            "emails_sent": sum(r.success for r in email_results),
+            "emails_sent": sum(r.success for r in email_send_results),
             "notifications_logged": len(logger_results),
         }
