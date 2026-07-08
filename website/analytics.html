@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Hospital AI Central | Conversational Analytics</title>
+
+<link rel="stylesheet" href="styles.css">
+
+<style>
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#0f172a;
+    color:white;
+    margin:0;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+    padding:40px;
+}
+
+textarea{
+    width:100%;
+    height:140px;
+    padding:15px;
+    border-radius:12px;
+    font-size:16px;
+    border:none;
+    outline:none;
+}
+
+button{
+    margin-top:20px;
+    padding:14px 35px;
+    background:#2563eb;
+    color:white;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:18px;
+}
+
+button:hover{
+    background:#1d4ed8;
+}
+
+.card{
+    margin-top:30px;
+    background:#1e293b;
+    padding:20px;
+    border-radius:15px;
+}
+
+pre{
+    white-space:pre-wrap;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>📊 Conversational Analytics</h1>
+
+<p>
+Ask questions about your hospital database using natural language.
+</p>
+
+<textarea
+id="question"
+placeholder="Example: Which medical device has the highest downtime?">
+</textarea>
+
+<br>
+
+<button onclick="askAnalytics()">
+
+Analyze
+
+</button>
+
+<div class="card">
+
+<h3>Answer</h3>
+
+<p id="answer">
+
+Waiting...
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Generated SQL</h3>
+
+<pre id="sql">
+
+Waiting...
+
+</pre>
+
+</div>
+
+<div class="card">
+
+<h3>Rows</h3>
+
+<pre id="rows">
+
+Waiting...
+
+</pre>
+
+</div>
+
+</div>
+
+<script src="analytics.js"></script>
+
+</body>
+</html>
