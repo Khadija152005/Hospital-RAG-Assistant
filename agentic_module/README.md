@@ -360,3 +360,75 @@ Logger Agent
 v
 Notification Log Database
 ```
+
+
+## LangGraph Integration
+
+- Migrated workflow orchestration from the custom Coordinator Agent to LangGraph.
+- Introduced graph-based workflow execution with dedicated nodes for each processing stage.
+- Added shared workflow state management using LangGraph state schema.
+- Converted existing agents into graph nodes without changing their internal responsibilities.
+- Integrated LangGraph execution with the existing API and Scheduler layers through the Coordinator Agent.
+
+## LangGraph Workflow
+
+The maintenance workflow is now executed through a LangGraph-based orchestration layer:
+
+```text
+                START
+                  |
+                  v
+           Device Agent Node
+                  |
+                  v
+        Assignment Agent Node
+                  |
+                  v
+           Email Agent Node
+                  |
+                  v
+        Email Sender Node
+                  |
+                  v
+           Logger Agent Node
+                  |
+                  v
+                 END
+```
+
+### 🔄 Workflow State
+The graph maintains a shared state between all nodes to pass information dynamically:
+
+**`MaintenanceGraphState`**
+* `devices`
+* `assignments`
+* `emails`
+* `email_results`
+* `logs`
+
+---
+
+### 🏗️ Architecture After LangGraph Migration
+
+```text
+              API / Scheduler
+                    |
+                    v
+            Coordinator Agent
+                    |
+                    v
+                LangGraph
+                    |
+        -------------------------
+        |          |            |
+        v          v            v
+   Device Node  Assignment Node  Email Node
+                                     |
+                                     v
+                             Email Sender Tool
+                                     |
+                                     v
+                                Logger Node
+                                     |
+                                     v
+                         Notification Log Database
