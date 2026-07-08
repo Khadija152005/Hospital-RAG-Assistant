@@ -318,3 +318,45 @@ Scheduler execution time can be controlled using `.env`:
 ```env
 CRON_TIME_HOUR=8
 CRON_TIME_MINUTE=0
+```
+
+##  LLM-Powered Email Generation
+
+- Integrated LLM capabilities into the Email Agent.
+- Replaced static email templates with dynamic email generation.
+- Added LLM abstraction layer through `LLMTool`.
+- Integrated Ollama Cloud models for email generation.
+- Configured cloud-based model usage through environment variables.
+- Improved email prompt engineering to ensure:
+  - Professional hospital communication tone.
+  - Equipment details inclusion.
+  - Maintenance date awareness.
+  - Structured and concise email body generation.
+- Added constraints to prevent unnecessary information generation.
+
+
+## Current Workflow
+
+The current maintenance notification workflow:
+
+```bash
+Device Agent
+|
+v
+Assignment Agent
+|
+v
+Email Agent
+|
+v
+LLM Tool (Ollama Cloud)
+|
+v
+Email Sender Tool
+|
+v
+Logger Agent
+|
+v
+Notification Log Database
+```

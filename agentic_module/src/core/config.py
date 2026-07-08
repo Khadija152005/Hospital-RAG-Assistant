@@ -7,6 +7,10 @@ class Settings:
 
     def __init__(self):
 
+        self.LLM_PROVIDER = os.getenv("LLM_PROVIDER")
+
+        self.OLLAMA_MODEL = os.getenv("OLLAMA_MODEL")
+
         self.APP_TITLE = os.getenv("APP_TITLE", "Hospital RAG Assistant")
 
         self.APP_VERSION = os.getenv("APP_VERSION", "1.0.0")

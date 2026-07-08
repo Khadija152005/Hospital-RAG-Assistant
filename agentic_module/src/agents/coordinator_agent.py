@@ -7,6 +7,8 @@ from agents import (
 
 from tools import EmailSender
 
+from schemas import MaintenanceWorkflowState
+
 
 class CoordinatorAgent:
 
@@ -24,33 +26,51 @@ class CoordinatorAgent:
 
     def run(self):
 
-        # print("🚀 Starting Maintenance Workflow...")
+        state = MaintenanceWorkflowState()
 
-        device_tasks = self.device_agent.run()
 
-        # print("✅ Device tasks fetched successfully.")
+        # 1. Device Agent
 
-        assignment_tasks = self.assignment_agent.enrich_tasks(device_tasks)
+        state.devices = self.device_agent.run()
 
-        # print("✅ Assignment tasks enriched successfully.")
 
-        email_tasks = self.email_agent.build_emails(assignment_tasks)
+        # 2. Assignment Agent
 
-        # print("✅ Email tasks built successfully.")
+        state.assignments = self.assignment_agent.enrich_tasks(
+            state.devices
+        )
 
-        email_send_results = self.email_sender.send_emails(email_tasks)
 
-        # print("✅ Email Send Results")
+        # 3. Email Agent
 
-        logger_results = self.logger_agent.log(email_tasks, email_send_results)
-       
-        # print("✅ Logger Results")
+        state.emails = self.email_agent.build_emails(
+            state.assignments
+        )
 
-        
+        # for email in state.emails[:1]:
+        #     print(email.email_body)
+
+        # 4. Email Sender Tool
+
+        state.email_results = self.email_sender.send_emails(
+            state.emails
+        )
+
+
+        # 5. Logger Agent
+
+        state.logs = self.logger_agent.log(
+            state.emails,
+            state.email_results,
+        )
+
+
         return {
             "status": "success",
-            "devices_found": len(device_tasks),
-            "emails_generated": len(email_tasks),
-            "emails_sent": sum(r.success for r in email_send_results),
-            "notifications_logged": len(logger_results),
+            "devices_found": len(state.devices),
+            "emails_generated": len(state.emails),
+            "emails_sent": sum(
+                r.success for r in state.email_results
+            ),
+            "notifications_logged": len(state.logs),
         }
