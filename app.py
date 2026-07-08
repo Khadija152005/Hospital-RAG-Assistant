@@ -35,8 +35,8 @@ def chat(request: QueryRequest):
 def update_settings(request: SettingsRequest):
     try:
         from dotenv import set_key
-        # Target the .env file inside rag_component
-        env_path = os.path.join(os.path.dirname(__file__), "rag_component", ".env")
+        # Target the .env file in the main directory
+        env_path = os.path.join(os.path.dirname(__file__), ".env")
         set_key(env_path, "GROQ_API_KEY", request.groq_api_key)
         
         # Update the active environment variable immediately
