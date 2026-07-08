@@ -9,7 +9,9 @@ All constants, mappings, and settings live here.
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+# Always load .env from the rag_component directory
+env_path = os.path.join(os.path.dirname(__file__), ".env")
+load_dotenv(env_path)
 
 # ─────────────────────────────────────────────────────────────────
 # ENVIRONMENT VARIABLES

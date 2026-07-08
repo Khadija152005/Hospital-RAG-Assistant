@@ -45,6 +45,7 @@ STRICT RULES:
 5. Be precise and technical — the user is a qualified biomedical engineer.
 6. If the answer applies to a specific device, clearly state which device.
 7. Do NOT make up information or fill gaps with general knowledge.
+8. ALWAYS answer in the exact same language the user used to ask the question.
 
 Context from device manuals:
 ─────────────────────────────
@@ -96,6 +97,24 @@ def build_qa_chain():
 
 
 # ─────────────────────────────────────────────────────────────────
+# QUERY TRANSLATION
+# ─────────────────────────────────────────────────────────────────
+def translate_query_to_english(query: str) -> str:
+    """
+    Translates a non-English query to English for better retrieval against
+    the English vector database. If it's already English, returns as is.
+    """
+    llm = get_llm()
+    translation_prompt = PromptTemplate.from_template(
+        "Translate the following question into English. "
+        "If it is already in English, just return it exactly as is without any other text. "
+        "Question: {query}"
+    )
+    chain = translation_prompt | llm | StrOutputParser()
+    return chain.invoke({"query": query}).strip()
+
+
+# ─────────────────────────────────────────────────────────────────
 # MAIN ASK FUNCTION
 # ─────────────────────────────────────────────────────────────────
 def ask(question: str, manual_filter: dict = None) -> dict:
@@ -121,9 +140,12 @@ def ask(question: str, manual_filter: dict = None) -> dict:
     if manual_filter is None:
         manual_filter = detect_manual_from_query(question)
 
-    # Step 1: retrieve relevant chunks (kept separate to capture source docs)
+    # Step 0: Translate question to English for retrieval
+    translated_query = translate_query_to_english(question)
+
+    # Step 1: retrieve relevant chunks using the TRANSLATED query
     retriever = get_retriever(filter=manual_filter)
-    docs      = retriever.invoke(question)
+    docs      = retriever.invoke(translated_query)
 
     # Step 2: build context string from retrieved chunks
     context = "\n\n".join(doc.page_content for doc in docs)

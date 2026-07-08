@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hospital AI Central - Landing</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="landing-body">
+    
+    <!-- Top Navigation -->
+    <nav class="landing-nav">
+        <div class="landing-brand">
+            <i class="fa-solid fa-staff-snake"></i>
+            <span>Hospital AI Central</span>
+        </div>
+        <div class="landing-links">
+            <a href="#features">Features</a>
+            <a href="#">About</a>
+            <a href="#">Contact Support</a>
+            <button id="landing-settings-btn" class="icon-btn"><i class="fa-solid fa-gear"></i></button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section">
+        <div class="hero-content">
+            <div class="hero-badge">Now featuring Multilingual RAG 🌍</div>
+            <h1>The Next Generation of<br><span class="text-gradient">Biomedical Engineering</span></h1>
+            <p>Empower your clinical engineering team with instant, AI-driven technical support, smart inventory management, and real-time hospital analytics.</p>
+            <div class="hero-actions">
+                <a href="rag.html" class="btn-primary-large">
+                    Open Technical RAG Assistant <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <div class="glass-mockup">
+                <i class="fa-solid fa-microchip"></i>
+                <h3>AI Powered Insights</h3>
+                <p>Retrieval-Augmented Generation across thousands of device manuals.</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Features Grid -->
+    <section id="features" class="features-section">
+        <div class="section-header">
+            <h2>Platform Capabilities</h2>
+            <p>A unified ecosystem for hospital infrastructure management.</p>
+        </div>
+        
+        <div class="feature-grid">
+            <!-- Feature 1 -->
+            <div class="feature-card active-feature" onclick="window.location.href='rag.html'">
+                <div class="feature-icon"><i class="fa-solid fa-stethoscope"></i></div>
+                <h3>Technical RAG Assistant</h3>
+                <p>Chat with your medical manuals. Instantly troubleshoot infusion pumps, ECGs, and hemodialysis machines in English or Arabic.</p>
+                <span class="feature-status status-live">Live</span>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="feature-card locked-feature">
+                <div class="feature-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+                <h3>Inventory & Supply Chain</h3>
+                <p>Automated stock tracking for medical supplies and predictive ordering based on hospital usage rates.</p>
+                <span class="feature-status status-coming">Coming Soon</span>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="feature-card locked-feature">
+                <div class="feature-icon"><i class="fa-solid fa-chart-line"></i></div>
+                <h3>Hospital Analytics</h3>
+                <p>Real-time dashboards tracking device uptime, maintenance schedules, and critical failure metrics.</p>
+                <span class="feature-status status-coming">Coming Soon</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Settings Modal (Shared structure with rag.html) -->
+    <div id="settings-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <button class="close-modal" id="close-settings"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <h3>Dark Mode</h3>
+                        <p>Switch between light and dark themes</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="dark-mode-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <hr class="modal-divider">
+                <div class="form-group">
+                    <label for="llm-api-key">Groq API Key (LLM)</label>
+                    <div class="input-with-icon">
+                        <i class="fa-solid fa-key"></i>
+                        <input type="password" id="llm-api-key" placeholder="gsk_..." autocomplete="off">
+                    </div>
+                    <small>Updates your .env file dynamically so it persists.</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="save-settings-btn" class="btn-primary">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- We can reuse script.js for the settings modal, but we'll add a tiny inline script to link the settings button -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const settingsBtn = document.getElementById('landing-settings-btn');
+            const settingsModal = document.getElementById('settings-modal');
+            const closeSettings = document.getElementById('close-settings');
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const llmApiKey = document.getElementById('llm-api-key');
+            const saveSettingsBtn = document.getElementById('save-settings-btn');
+
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark-theme');
+                darkModeToggle.checked = true;
+            }
+
+            settingsBtn.addEventListener('click', (e) => { e.preventDefault(); settingsModal.classList.remove('hidden'); });
+            closeSettings.addEventListener('click', () => { settingsModal.classList.add('hidden'); });
+
+            darkModeToggle.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                    document.body.classList.add('dark-theme');
+                    localStorage.setItem('darkMode', 'true');
+                } else {
+                    document.body.classList.remove('dark-theme');
+                    localStorage.setItem('darkMode', 'false');
+                }
+            });
+
+            saveSettingsBtn.addEventListener('click', async () => {
+                const apiKey = llmApiKey.value.trim();
+                if (!apiKey) { settingsModal.classList.add('hidden'); return; }
+                const originalText = saveSettingsBtn.textContent;
+                saveSettingsBtn.textContent = 'Saving...';
+                saveSettingsBtn.disabled = true;
+                try {
+                    const response = await fetch('/api/settings', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ groq_api_key: apiKey })
+                    });
+                    if (!response.ok) throw new Error('Failed to update settings');
+                    llmApiKey.value = '';
+                    settingsModal.classList.add('hidden');
+                    alert("API Key updated successfully!");
+                } catch (error) { alert(error.message); } 
+                finally { saveSettingsBtn.textContent = originalText; saveSettingsBtn.disabled = false; }
+            });
+        });
+    </script>
+</body>
+</html>

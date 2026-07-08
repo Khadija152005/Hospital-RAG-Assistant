@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hospital AI Central</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        
+        <!-- Global Sidebar Navigation -->
+        <nav class="global-nav">
+            <div class="nav-brand">
+                <a href="index.html" class="brand-icon" style="text-decoration:none;">
+                    <i class="fa-solid fa-staff-snake"></i>
+                </a>
+            </div>
+            <ul class="nav-links">
+                <li class="active" title="RAG Assistant">
+                    <a href="#"><i class="fa-solid fa-stethoscope"></i></a>
+                </li>
+                <li title="Inventory System (Coming Soon)">
+                    <a href="#"><i class="fa-solid fa-boxes-stacked"></i></a>
+                </li>
+                <li title="Analytics (Coming Soon)">
+                    <a href="#"><i class="fa-solid fa-chart-line"></i></a>
+                </li>
+            </ul>
+            <div class="nav-bottom">
+                <a href="#" id="settings-btn" title="Settings"><i class="fa-solid fa-gear"></i></a>
+            </div>
+        </nav>
+
+        <!-- Secondary Panel (Contextual) -->
+        <aside class="context-panel">
+            <div class="panel-header">
+                <h2>RAG Assistant</h2>
+                <span class="badge">Module</span>
+            </div>
+            
+            <div class="panel-content">
+                <div class="form-group">
+                    <label for="asset-id">Target Device Asset ID</label>
+                    <div class="input-with-icon">
+                        <i class="fa-solid fa-barcode"></i>
+                        <input type="text" id="asset-id" placeholder="e.g. INF-001, ECG-002" autocomplete="off">
+                    </div>
+                    <small>Filters RAG context to a specific device.</small>
+                </div>
+
+                <div class="info-card">
+                    <h3><i class="fa-solid fa-book-medical"></i> Knowledge Base</h3>
+                    <ul class="device-list">
+                        <li>
+                            <i class="fa-solid fa-pump-medical"></i>
+                            <span>BeneFusion VP3 Vet</span>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-heart-pulse"></i>
+                            <span>MAC 2000 ECG</span>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-droplet"></i>
+                            <span>Fresenius 4008S</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-titles">
+                    <h1>Technical Troubleshooting</h1>
+                    <p>Powered by Llama 3 & Neon pgvector</p>
+                </div>
+                <div class="user-profile">
+                    <img src="https://ui-avatars.com/api/?name=Biomedical+Engineer&background=0D8ABC&color=fff" alt="User Profile">
+                </div>
+            </header>
+
+            <!-- Chat Interface -->
+            <div class="chat-container">
+                <div class="chat-history" id="chat-history">
+                    <div class="message assistant-message">
+                        <div class="message-avatar">
+                            <i class="fa-solid fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <p>Hello! I am your AI Biomedical Engineering Assistant. I have read the manuals for our infusion pumps, ECGs, and hemodialysis machines. How can I help?</p>
+                            <div class="suggestion-chips">
+                                <button class="chip" onclick="document.getElementById('question').value='What does [Occlusion] alarm mean?';"><i class="fa-solid fa-circle-question"></i> Occlusion alarm?</button>
+                                <button class="chip" onclick="document.getElementById('question').value='MAC 2000 won\'t power on';"><i class="fa-solid fa-bolt"></i> MAC 2000 power issue</button>
+                                <button class="chip" onclick="document.getElementById('question').value='How to calibrate Fresenius 4008S?';"><i class="fa-solid fa-wrench"></i> Fresenius calibration</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-input-area">
+                    <form id="chat-form">
+                        <div class="input-wrapper">
+                            <input type="text" id="question" placeholder="Ask a technical question about a device..." required autocomplete="off">
+                            <button type="submit" id="send-btn">
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <button class="close-modal" id="close-settings"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <h3>Dark Mode</h3>
+                        <p>Switch between light and dark themes</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="dark-mode-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                
+                <hr class="modal-divider">
+
+                <div class="form-group">
+                    <label for="llm-api-key">Groq API Key (LLM)</label>
+                    <div class="input-with-icon">
+                        <i class="fa-solid fa-key"></i>
+                        <input type="password" id="llm-api-key" placeholder="gsk_..." autocomplete="off">
+                    </div>
+                    <small>Updates your .env file dynamically so it persists.</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="save-settings-btn" class="btn-primary">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom JS -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
