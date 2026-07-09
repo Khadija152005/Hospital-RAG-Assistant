@@ -35,7 +35,23 @@ Example Questions:
 - Which spare parts are below the reorder level?
 
 ---
+---
+## 🗓 Smart Asset Re-routing & Scheduling
+- Detects when a critical hospital device (e.g. dialysis machine) goes into unplanned failure (`Corrective Maintenance` status).
+- Automatically finds an available backup device of the same type and department.
+- Pulls every patient appointment scheduled on the failed device.
+- Reassigns appointments to the backup device, in chronological order, with no conflicts.
+- Estimates resulting patient delay.
+- Withholds any database writes until the user explicitly confirms.
+- Includes a local test dashboard to view non-operational assets and browse all appointments.
 
+Example prompts:
+
+- Is anything broken right now?
+- DIAL-008 failed. Check its schedule for 2026-03-13 and propose a reassignment.
+- Find a backup for VENT-001.
+---
+---
 ## 🌍 Multilingual Support
 - Supports Arabic and English.
 - User questions are translated automatically when required.
