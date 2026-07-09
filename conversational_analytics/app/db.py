@@ -14,24 +14,44 @@ class DatabaseConnectionError(RuntimeError):
 
 
 def create_engine_from_settings(settings: AppSettings) -> Engine:
-    # Use SQLAlchemy URL object to correctly encode credentials and query params (sslmode, channel_binding)
+    """
+    Create a SQLAlchemy Engine using the validated settings.
+    """
+
     url = settings.database_url_object()
-    engine = create_engine(url, pool_pre_ping=True, future=True)
+
+    engine = create_engine(
+        url,
+        pool_pre_ping=True,
+        future=True,
+    )
+
     return engine
 
 
 def create_sql_database(settings: AppSettings) -> tuple[Engine, SQLDatabase]:
+    """
+    Create both:
+    1. SQLAlchemy Engine
+    2. LangChain SQLDatabase
+
+    Uses the SAME engine to avoid reconnecting with different credentials.
+    """
+
     engine = create_engine_from_settings(settings)
+
     try:
+        # Verify connection
         with engine.connect() as connection:
-            # quick smoke test
             connection.execute(text("SELECT 1"))
-        # LangChain SQLDatabase expects a URI string; use the textual form of the URL
-        query: dict[str, str] = {"sslmode": settings.pg_sslmode}
-        if getattr(settings, "pg_channel_binding", ""):
-            query["channel_binding"] = settings.pg_channel_binding
-        database = SQLDatabase.from_uri(str(settings.database_url_object()))
+
+        # IMPORTANT:
+        # Reuse the existing Engine instead of creating a new connection
+        database = SQLDatabase(engine=engine)
+
     except SQLAlchemyError as exc:
-        raise DatabaseConnectionError("Database connection failed.") from exc
+        raise DatabaseConnectionError(
+            "Database connection failed."
+        ) from exc
 
     return engine, database
