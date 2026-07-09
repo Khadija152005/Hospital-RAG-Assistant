@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hospital AI Central - Scheduling Optimizer</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+
+        <!-- Global Sidebar Navigation -->
+        <nav class="global-nav">
+            <div class="nav-brand">
+                <a href="index.html" class="brand-icon" style="text-decoration:none;">
+                    <i class="fa-solid fa-staff-snake"></i>
+                </a>
+            </div>
+            <ul class="nav-links">
+                <li title="RAG Assistant">
+                    <a href="rag.html"><i class="fa-solid fa-stethoscope"></i></a>
+                </li>
+                <li title="Inventory System (Coming Soon)">
+                    <a href="#"><i class="fa-solid fa-boxes-stacked"></i></a>
+                </li>
+                <li title="Conversational Analytics">
+                    <a href="analytics.html"><i class="fa-solid fa-chart-line"></i></a>
+                </li>
+                <li class="active" title="Scheduling Optimizer">
+                    <a href="scheduling.html"><i class="fa-solid fa-calendar-check"></i></a>
+                </li>
+            </ul>
+            <div class="nav-bottom">
+                <a href="#" id="settings-btn" title="Settings"><i class="fa-solid fa-gear"></i></a>
+            </div>
+        </nav>
+
+        <!-- Secondary Panel (Contextual) -->
+        <aside class="context-panel">
+            <div class="panel-header">
+                <h2>Scheduling Optimizer</h2>
+                <span class="badge">Module</span>
+            </div>
+
+            <div class="panel-content">
+                <div class="form-group">
+                    <label for="asset-filter">Filter Appointments by Asset ID</label>
+                    <div class="input-with-icon">
+                        <i class="fa-solid fa-barcode"></i>
+                        <input type="text" id="asset-filter" placeholder="e.g. DIAL-008, VENT-001" autocomplete="off">
+                    </div>
+                    <small>Used on the Dashboard tab to narrow the appointment list.</small>
+                </div>
+
+                <div class="info-card">
+                    <h3><i class="fa-solid fa-circle-info"></i> Quick Prompts</h3>
+                    <ul class="device-list">
+                        <li style="cursor:pointer;" onclick="document.getElementById('question').value='Is anything broken right now?';">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <span>Is anything broken right now?</span>
+                        </li>
+                        <li style="cursor:pointer;" onclick="document.getElementById('question').value='DIAL-008 failed. Check its schedule for 2026-03-13 and propose a reassignment.';">
+                            <i class="fa-solid fa-arrows-rotate"></i>
+                            <span>Test a DIAL-008 reassignment</span>
+                        </li>
+                        <li style="cursor:pointer;" onclick="document.getElementById('question').value='Find a backup for VENT-001.';">
+                            <i class="fa-solid fa-lungs"></i>
+                            <span>Find a backup for VENT-001</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-titles">
+                    <h1>Smart Asset Re-routing &amp; Scheduling</h1>
+                    <p>Detects device failures, finds backups, and reassigns appointments</p>
+                </div>
+
+                <div class="header-tabs">
+                    <button class="tab-btn active" data-view="sched-chat-view">Chat</button>
+                    <button class="tab-btn" data-view="sched-dashboard-view">Dashboard</button>
+                </div>
+
+                <div class="user-profile">
+                    <img src="https://ui-avatars.com/api/?name=Biomedical+Engineer&background=0D8ABC&color=fff" alt="User Profile">
+                </div>
+            </header>
+
+            <!-- CHAT VIEW -->
+            <div id="sched-chat-view" class="sched-view active">
+                <div class="chat-container">
+                    <div class="chat-history" id="sched-chat-history">
+                        <div class="message assistant-message">
+                            <div class="message-avatar">
+                                <i class="fa-solid fa-robot"></i>
+                            </div>
+                            <div class="message-content">
+                                <p>Hi! I'm the Hospital Scheduling Optimization Assistant. Tell me about a device failure and I'll find a backup, pull the affected appointments, and propose a reassignment.</p>
+                                <div class="suggestion-chips">
+                                    <button class="chip" onclick="document.getElementById('question').value='Is anything broken right now?';"><i class="fa-solid fa-triangle-exclamation"></i> Any failures?</button>
+                                    <button class="chip" onclick="document.getElementById('question').value='DIAL-008 failed. Check its schedule for 2026-03-13 and propose a reassignment.';"><i class="fa-solid fa-arrows-rotate"></i> Reassign DIAL-008</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chat-input-area">
+                        <form id="sched-chat-form">
+                            <div class="input-wrapper">
+                                <input type="text" id="question" placeholder="Ask about a failure, backup, or reassignment..." required autocomplete="off">
+                                <button type="submit" id="sched-send-btn">
+                                    <i class="fa-solid fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DASHBOARD VIEW -->
+            <div id="sched-dashboard-view" class="sched-view">
+                <div class="sched-dashboard-scroll">
+                    <div class="dash-section">
+                        <h2>Assets Currently Not Operational</h2>
+                        <div class="scroll-box">
+                            <table>
+                                <thead>
+                                    <tr><th>Asset ID</th><th>Name</th><th>Type</th><th>Department</th><th>Status</th></tr>
+                                </thead>
+                                <tbody id="sched-assets-body"></tbody>
+                            </table>
+                            <div id="sched-assets-empty" class="empty-note" style="display:none;">All assets are currently Operational.</div>
+                        </div>
+                    </div>
+
+                    <div class="dash-section" style="margin-top:2rem;">
+                        <h2>Appointments</h2>
+                        <div class="scroll-box">
+                            <table>
+                                <thead>
+                                    <tr><th>Schedule ID</th><th>Patient</th><th>Asset</th><th>Date/Time</th><th>Status</th></tr>
+                                </thead>
+                                <tbody id="sched-appointments-body"></tbody>
+                            </table>
+                            <div id="sched-appointments-empty" class="empty-note" style="display:none;">No appointments found.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <button class="close-modal" id="close-settings"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <h3>Dark Mode</h3>
+                        <p>Switch between light and dark themes</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="dark-mode-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <hr class="modal-divider">
+
+                <div class="form-group">
+                    <label for="llm-api-key">Groq API Key (LLM)</label>
+                    <div class="input-with-icon">
+                        <i class="fa-solid fa-key"></i>
+                        <input type="password" id="llm-api-key" placeholder="gsk_..." autocomplete="off">
+                    </div>
+                    <small>Updates your .env file dynamically so it persists.</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="save-settings-btn" class="btn-primary">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom JS -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="scheduling.js"></script>
+</body>
+</html>

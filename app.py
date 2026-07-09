@@ -9,7 +9,7 @@ from pydantic import BaseModel
 
 # Add conversational analytics module
 from conversational_analytics.app.main import app as analytics_app
-
+from scheduling_agent.main import app as scheduling_app
 # Add rag_component to Python path so its internal imports work correctly
 sys.path.append(os.path.join(os.path.dirname(__file__), "rag_component"))
 
@@ -21,7 +21,7 @@ app = FastAPI(title="Hospital AI Central")
 
 # Mount Conversational Analytics module
 app.mount("/analytics", analytics_app)
-
+app.mount("/scheduling", scheduling_app)
 
 class QueryRequest(BaseModel):
     question: str
